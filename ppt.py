@@ -29,6 +29,7 @@ go_pos_keys = ['ahead'] # as in 'go ahead'
 do_pos_keys = ['it'] # as in 'do it'
 do_neg_keys = ['not'] # as in 'do not'
 i_pos_keys = ['guess', 'suppose', 'approve'] # as in 'I suppose' or 'I approve'
+why_pos_keys = ['not'] # as in 'why not'
 
 def shiftToAbs(value, pos=1, neg=1):
   if value == 0:
@@ -60,7 +61,10 @@ def requestPermissionFromUser(prompt=None, weight=0, default=False, debug=False,
     try:
       if _ask[i] == 'must' and _ask[i + 1] in must_neg_keys:
         _local_polarity -= 2 * (i + 1)
-
+      
+      elif _ask[i] == 'why' and _ask[i + 1] in why_pos_keys:
+        _local_polarity += 2 * (i + 1)
+        
       elif _ask[i] == 'not' and _ask[i + 1] in not_neut_keys:
         _local_polarity = shiftToAbs(_local_polarity)
       
