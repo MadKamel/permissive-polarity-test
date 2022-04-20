@@ -15,9 +15,11 @@
 #            questions.
 #
 #
+# Note from future me: Hi! This is future me. I just went into the code and added a bunch of comments. Bye!
+#
 
-
-positive_keywords = ['may', 'nice', 'please', 'yeet', 'want', 'ok', 'sure', 'can', 'good', 'yes', 'positive', 'true', 'yeah', 'affirmative', 'fine']
+# Keywords to look out for:
+positive_keywords = ['may', 'nice', 'please', 'want', 'ok', 'sure', 'can', 'good', 'yes', 'positive', 'true', 'yeah', 'affirmative', 'fine']
 negative_keywords = ['dont', 'cant', 'bad', 'no', 'negative', 'false', 'stop', 'not']
 neutral_keywords = ['maybe', 'neutral', 'um', 'guess']
 strong_negative_keywords = ['never']
@@ -31,27 +33,29 @@ do_neg_keys = ['not'] # as in 'do not'
 i_pos_keys = ['guess', 'suppose', 'approve'] # as in 'I suppose' or 'I approve'
 why_pos_keys = ['not'] # as in 'why not'
 
+# Nifty lil' function that shifts a number towards zero. It's a misnomer.
 def shiftToAbs(value, pos=1, neg=1):
-  if value == 0:
+  if value == 0: # Nothing to shift
     pass
 
-  elif value < 0:
+  elif value < 0: # It's negative, shift it up.
     value += pos
 
-  elif value > 0:
+  elif value > 0: # It's positive, shift it down.
     value -= neg
-  return value
+  return value # Return value.
 
 
 def getUserInput(prompt=''):
   return input(prompt+'\n < ').split(' ')
 
 
+# Main function
 def requestPermissionFromUser(prompt=None, weight=0, default=False, debug=False, diagnose=False):
-  _local_polarity = 0
-  _ask = getUserInput(prompt)
+  _local_polarity = 0 # I just added this comment here because I could
+  _ask = getUserInput(prompt) # This line wanted to be a team player too
 
-  for i in range(len(_ask)):
+  for i in range(len(_ask)): # Go through each word in list looking for keywords.
     if _ask[i] in positive_keywords:
       _local_polarity += 1 * (i + 1)
 
@@ -95,18 +99,21 @@ def requestPermissionFromUser(prompt=None, weight=0, default=False, debug=False,
       _local_polarity = shiftToAbs(_local_polarity)
 
   if debug: print('choice polarity: ', _local_polarity)
-  _simple_decision = shiftToAbs(_local_polarity, pos=weight, neg=weight)
+  _simple_decision = shiftToAbs(_local_polarity, pos=weight, neg=weight) # Shifts the resulting polarity based on severity/weight
   if debug: print('final decision: ', _simple_decision)
   if debug: print('\n')
 
-  if not diagnose:
+  if not diagnose: # Diagnose = Debug mode, so this is normal behaviour.
     if _simple_decision == 0:
-      return default
+      return default # Return the default judgement (indecisive)
   
     elif _simple_decision < 0:
-      return False
+      return False # Return False (negative polarity)
   
     elif _simple_decision > 0:
-      return True
-  else:
-    return [_local_polarity, _simple_decision, _ask]
+      return True # Return True (positive polarity)
+  else: # This, on the other hand, is debug behaviour.
+    return [_local_polarity, _simple_decision, _ask] # Just dump all the values
+
+
+# Goodbye
